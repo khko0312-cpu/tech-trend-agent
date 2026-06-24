@@ -1,0 +1,7 @@
+.env
+venv/
+chroma_db/
+briefings/
+__pycache__/
+*.pyc
+error_log.txt
