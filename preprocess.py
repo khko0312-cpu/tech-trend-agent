@@ -21,7 +21,7 @@ def deduplicate(articles):
  
 def extract_body(url):
     try:
-        html = httpx.get(url, timeout=10).text
+        html = httpx.get(url, timeout=20).text
         soup = BeautifulSoup(html, "html.parser")
         for tag in soup(["script", "style", "nav", "footer"]):
             tag.decompose()

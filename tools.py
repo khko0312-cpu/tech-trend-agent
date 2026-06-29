@@ -70,7 +70,11 @@ tools = [
 STYLE_MAP = {
     "developer": "기술 스펙, API 변경사항, 성능 수치를 중심으로",
     "sales":     "비즈니스 임팩트와 고객 설득 포인트를 중심으로",
-    "executive": "3줄 이내 요약과 액션 아이템 중심으로",
+    "executive": """3줄 이내 핵심 요약 후, 다음 구조로 작성:
+    - 시장 시사점: 이 변화가 업계 흐름에서 의미하는 것
+    - 경쟁 영향: 경쟁사 대비 우리 위치에 미치는 영향
+    - 검토 포인트: 지금 검토해볼 만한 질문이나 의사결정 1~2개
+    (확정적인 "전략"이 아니라 "검토해볼 포인트"로 제시하고, 참고 아티클에 근거하지 않은 추측은 하지 마세요)""",
 }
  
  
@@ -78,9 +82,11 @@ def extract_keywords(query):
     """질문에서 검색용 키워드를 추출하는 전처리 노드 (피드백 1번)"""
     prompt = f"""다음 질문에서 검색에 사용할 핵심 키워드를 추출하세요.
 질문: {query}
- 
+
 쉼표로 구분된 키워드만 응답하세요 (설명 없이). 2~4개 정도가 적당합니다.
-예: "Bedrock이랑 SageMaker 최신 업데이트 비교해줘" -> Bedrock, SageMaker, 업데이트"""
+고유명사(서비스명 등)는 영어 그대로, 일반 명사는 한국어로 추출하세요.
+예: "Bedrock이랑 SageMaker 최신 업데이트 비교해줘" -> Bedrock, SageMaker, 업데이트
+예: "GCP Vertex AI 트러블슈팅 방법" -> GCP, Vertex AI, 트러블슈팅"""
  
     try:
         response = client.chat.completions.create(
@@ -167,6 +173,10 @@ def execute_tool(name, args):
  
 {STYLE_MAP.get(audience, STYLE_MAP['developer'])} 마크다운으로 작성하세요.
 주의: 참고 아티클에 없는 내용은 추측해서 작성하지 마세요."""
+
+브리핑 작성 후, 마지막에 "## 추가로 알아보면 좋을 질문" 섹션을 만들어
+위 참고 아티클 내용에 근거해서 사용자가 다음에 물어볼 만한 후속 질문 3개를 제안하세요.
+참고 아티클에 없는 내용을 추측해서 질문을 만들지 마세요."""
  
         response = client.chat.completions.create(
             model="gpt-4o",
