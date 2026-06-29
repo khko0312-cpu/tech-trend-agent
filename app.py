@@ -5,6 +5,8 @@ if "OPENAI_API_KEY" in st.secrets:
     os.environ["OPENAI_API_KEY"] = st.secrets["OPENAI_API_KEY"]
 
 from agent import run_agent
+from vectorstore import collection
+from tools import execute_tool
 
 st.title("기술 트렌드 모니터링 Agent")
 
@@ -14,7 +16,7 @@ if "initialized" not in st.session_state:
         if collection.count() == 0:
             execute_tool("collect_latest_articles", {})
     st.session_state.initialized = True
-    
+
 if "history" not in st.session_state:
     st.session_state.history = []
 
