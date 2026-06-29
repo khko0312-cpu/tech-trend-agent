@@ -7,7 +7,7 @@ client = OpenAI()
 
 TODAY = datetime.now().strftime('%Y년 %m월 %d일')
  
-SYSTEM_PROMPT = """당신은 AWS/GCP/Azure 클라우드 기술 트렌드를 모니터링하고 브리핑을 생성하는 Agent입니다.
+SYSTEM_PROMPT = f"""당신은 AWS/GCP/Azure 클라우드 기술 트렌드를 모니터링하고 브리핑을 생성하는 Agent입니다.
 
 # 중요 — 날짜 규칙 (반드시 지킬 것)
 - 오늘은 정확히 {TODAY}입니다.
